@@ -48,7 +48,7 @@ const Navbar = () => (
         </NavMenuItem>
         <NavMenuItem href="https://x.com/gathoni_zarah">
           <span className="relative font-medium text-slate-700 transition-colors hover:text-orange-600 dark:text-slate-300 dark:hover:text-orange-400">
-            Twitter
+            X
             <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 group-hover:w-full dark:bg-orange-400"></span>
           </span>
         </NavMenuItem>

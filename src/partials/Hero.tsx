@@ -43,9 +43,13 @@ const Hero = () => (
               >
                 React
               </a>{' '}
-              for frontend development. I create technical documentation and am
-              currently exploring Zero-Knowledge Proofs to expand my expertise in
-              blockchain scaling solutions.
+              for frontend development. I create technical documentation and{' '}  
+              <a
+              className="font-medium text-slate-900 underline decoration-amber-500/30 decoration-2 underline-offset-4 transition-all hover:decoration-amber-500 dark:text-slate-100 dark:decoration-amber-400/30 dark:hover:decoration-amber-400"
+              href="/"
+              >
+                Video Content
+              </a>{' '} on Tiktok and X to help onboard people to Web3.
             </span>
           </>
         }
@@ -81,8 +85,8 @@ const Hero = () => (
             >
               <div className="absolute -inset-2 rounded-full bg-slate-200/0 transition-all group-hover:bg-slate-200/50 dark:group-hover:bg-slate-700/50" />
               <HeroSocial
-                src="/assets/images/twitter-icon.png"
-                alt="Twitter"
+                src="/assets/images/xlogo.jpg"
+                alt="X"
               />
             </a>
             <a

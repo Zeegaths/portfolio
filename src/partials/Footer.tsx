@@ -6,7 +6,7 @@ import { AppConfig } from '@/utils/AppConfig';
 const Footer = () => (
   <Section>
     <div className="border-t border-slate-200 pt-8 dark:border-slate-700">
-      <FooterCopyright site_name={AppConfig.site_name} />
+      {/* <FooterCopyright site_name={AppConfig.site_name} /> */}
       
       <div className="mt-6 flex flex-col items-center justify-center gap-4 text-center text-sm text-slate-600 dark:text-slate-400">
         <p className="flex items-center gap-2">
@@ -26,7 +26,7 @@ const Footer = () => (
             href="https://x.com/gathoni_zarah" 
             className="transition-colors hover:text-orange-600 dark:hover:text-orange-400"
           >
-            Twitter
+            X
           </a>
           <a 
             href="https://www.linkedin.com/in/mary-wangui--/" 
