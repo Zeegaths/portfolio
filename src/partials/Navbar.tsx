@@ -1,3 +1,4 @@
+// Navbar.tsx
 import {
   Logo,
   NavbarTwoColumns,
@@ -9,11 +10,11 @@ import {
 const Navbar = () => (
   <Section>
     <NavbarTwoColumns>
-      <a href="/">
+      <a href="/" className="group">
         <Logo
           icon={
             <svg
-              className="mr-1 h-10 w-10 stroke-cyan-600"
+              className="mr-1 h-10 w-10 stroke-slate-800 transition-all group-hover:stroke-orange-500 dark:stroke-slate-100 dark:group-hover:stroke-orange-400"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               fill="none"
@@ -33,9 +34,24 @@ const Navbar = () => (
       </a>
 
       <NavMenu>
-        <NavMenuItem href="/posts/">Blogs</NavMenuItem>
-        <NavMenuItem href="https://github.com/Zeegaths">GitHub</NavMenuItem>
-        <NavMenuItem href="https://x.com/gathoni_zarah">Twitter</NavMenuItem>
+        <NavMenuItem href="/posts/">
+          <span className="relative font-medium text-slate-700 transition-colors hover:text-orange-600 dark:text-slate-300 dark:hover:text-orange-400">
+            Blogs
+            <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 group-hover:w-full dark:bg-orange-400"></span>
+          </span>
+        </NavMenuItem>
+        <NavMenuItem href="https://github.com/Zeegaths">
+          <span className="relative font-medium text-slate-700 transition-colors hover:text-orange-600 dark:text-slate-300 dark:hover:text-orange-400">
+            GitHub
+            <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 group-hover:w-full dark:bg-orange-400"></span>
+          </span>
+        </NavMenuItem>
+        <NavMenuItem href="https://x.com/gathoni_zarah">
+          <span className="relative font-medium text-slate-700 transition-colors hover:text-orange-600 dark:text-slate-300 dark:hover:text-orange-400">
+            Twitter
+            <span className="absolute bottom-0 left-0 h-0.5 w-0 bg-orange-500 transition-all duration-300 group-hover:w-full dark:bg-orange-400"></span>
+          </span>
+        </NavMenuItem>
       </NavMenu>
     </NavbarTwoColumns>
   </Section>
