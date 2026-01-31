@@ -49,7 +49,7 @@ const Hero = () => (
               href="/"
               >
                 Video Content
-              </a>{' '} on Tiktok and X to help onboard people to Web3.
+              </a>{' '} on X, instagram and Tiktok to help onboard people to Web3.
             </span>
           </>
         }
