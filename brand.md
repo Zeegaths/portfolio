@@ -1,4 +1,4 @@
-# Brand: Zarah Gathoni Portfolio
+# Brand: Mary Gathoni Portfolio
 
 _Status: active_
 

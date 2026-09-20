@@ -1,9 +1,9 @@
 export const AppConfig = {
-  site_name: 'Zarah Gathoni',
-  title: 'Zarah Gathoni | Blockchain Developer',
+  site_name: 'Mary Gathoni',
+  title: 'Mary Gathoni | Blockchain Developer',
   description:
     'Nairobi-based blockchain developer and Web3 market entry strategist. Solidity, Rust and Motoko on-chain, with BD, partnerships and go-to-market across African markets.',
-  author: 'Zarah Gathoni',
+  author: 'Mary Gathoni',
   locale_region: 'en-us',
   locale: 'en',
   email: 'zarahgathoni76@gmail.com',

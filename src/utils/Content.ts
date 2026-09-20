@@ -132,13 +132,13 @@ export type GalleryItem = {
 export const galleryItems: GalleryItem[] = [
   {
     src: '/assets/images/stellar.jpeg',
-    alt: 'Zarah Gathoni speaking into a microphone beside a Stellar Impact Studio banner',
+    alt: 'Mary Gathoni speaking into a microphone beside a Stellar Impact Studio banner',
     caption: 'Technical mentor at Stellar Impact Studio',
     meta: 'Give Kenya, 2026',
   },
   {
     src: '/assets/images/dubai.jpg',
-    alt: 'Zarah Gathoni pitching MicroCrop on stage with a co-founder',
+    alt: 'Mary Gathoni pitching MicroCrop on stage with a co-founder',
     caption: 'Pitching MicroCrop at Demo Day Dubai',
     meta: 'Founders Forge, 2025',
   },
