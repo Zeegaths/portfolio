@@ -24,8 +24,8 @@ const orbitDuration = 28;
     </div>
   </div>
 
-  <div class='container-page py-16 sm:py-24 lg:py-32'>
-    <div class='grid items-center gap-12 lg:grid-cols-12 lg:gap-16'>
+  <div class='container-page py-12 sm:py-16 lg:py-20'>
+    <div class='grid items-center gap-8 lg:grid-cols-12 lg:gap-10'>
       <div class='lg:col-span-7'>
         <p class='eyebrow reveal'>
           <span class='relative flex h-2 w-2' aria-hidden='true'>
@@ -124,7 +124,7 @@ const orbitDuration = 28;
       </div>
 
       <div class='reveal lg:col-span-5' style='--reveal-delay: 160ms;'>
-        <div class='relative mx-auto aspect-square w-full max-w-sm'>
+        <div class='relative mx-auto aspect-square w-full max-w-md'>
           <!-- Orbit ring + travelling logos. -->
           <div
             class='absolute inset-0 rounded-full border border-dashed border-line'
@@ -133,7 +133,7 @@ const orbitDuration = 28;
             {orbiting.map((tech, index) => (
               <span
                 class="absolute left-1/2 top-1/2 -ml-6 -mt-6 grid h-12 w-12 place-items-center rounded-xl border border-line bg-surface shadow-sm motion-safe:animate-orbit"
-                style={`--orbit-r: clamp(96px, 36vw, 168px); animation-delay: -${
+                style={`--orbit-r: clamp(100px, 38vw, 200px); animation-delay: -${
                   (orbitDuration / orbiting.length) * index
                 }s;`}
               >
@@ -150,7 +150,7 @@ const orbitDuration = 28;
           </div>
 
           <div
-            class='absolute inset-[14%] overflow-hidden rounded-full border border-line bg-surface'
+            class='absolute inset-[10%] overflow-hidden rounded-full border border-line bg-surface'
           >
             <!-- Black and white by default, full colour on hover.
                  Falls back through .png then the old headshot if the new
@@ -170,7 +170,7 @@ const orbitDuration = 28;
 
     <!-- Stats strip -->
     <dl
-      class='reveal mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:mt-24 sm:grid-cols-4'
+      class='reveal mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:mt-16 sm:grid-cols-4'
     >
       {stats.map((stat) => (
         <div class="bg-surface px-6 py-7">

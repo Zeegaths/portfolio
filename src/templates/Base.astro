@@ -84,10 +84,27 @@ const {
               }
             });
           },
-          { rootMargin: '0px 0px -12% 0px', threshold: 0.1 }
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.05 }
         );
 
         revealables.forEach((el) => observer.observe(el));
+
+        // Safety net: anything already within the viewport must be visible,
+        // even if a late webfont shifted it after the observer first ran.
+        // Without this, short viewports can leave the hero actions hidden.
+        const revealInView = () => {
+          revealables.forEach((el) => {
+            if (el.classList.contains('is-visible')) return;
+            if (el.getBoundingClientRect().top < window.innerHeight) {
+              el.classList.add('is-visible');
+              observer.unobserve(el);
+            }
+          });
+        };
+
+        revealInView();
+        window.addEventListener('load', revealInView);
+        document.fonts?.ready.then(revealInView);
       }
 
       // --- Line-by-line headline reveal ----------------------------------
