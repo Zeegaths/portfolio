@@ -1,0 +1,230 @@
+---
+import { roles, stats, techStack } from '@/utils/Content';
+
+// Four logos ride the orbit ring; delays spread them evenly around it.
+const orbiting = techStack.slice(0, 4);
+const orbitDuration = 28;
+---
+
+<section class='relative overflow-hidden'>
+  <!-- Animated mesh. Decorative only, so it is hidden from assistive tech. -->
+  <div class='pointer-events-none absolute inset-0 -z-10' aria-hidden='true'>
+    <div
+      class='absolute -left-24 -top-32 h-[28rem] w-[28rem] rounded-full bg-violet/20 blur-3xl motion-safe:animate-drift'
+    >
+    </div>
+    <div
+      class='absolute -right-20 top-10 h-[26rem] w-[26rem] rounded-full bg-lime/30 blur-3xl motion-safe:animate-drift-slow'
+    >
+    </div>
+    <div
+      class='absolute bottom-0 left-1/3 h-[22rem] w-[22rem] rounded-full bg-violet-soft blur-3xl motion-safe:animate-drift'
+      style='animation-duration: 34s;'
+    >
+    </div>
+  </div>
+
+  <div class='container-page py-16 sm:py-24 lg:py-32'>
+    <div class='grid items-center gap-12 lg:grid-cols-12 lg:gap-16'>
+      <div class='lg:col-span-7'>
+        <p class='eyebrow reveal'>
+          <span class='relative flex h-2 w-2' aria-hidden='true'>
+            <span
+              class='absolute inline-flex h-full w-full rounded-full bg-violet/60 motion-safe:animate-pulse-ring'
+            ></span>
+            <span class='relative inline-flex h-2 w-2 rounded-full bg-violet'
+            ></span>
+          </span>
+          Remote worldwide
+        </p>
+
+        <h1
+          class='reveal text-balance mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-7xl'
+          style='--reveal-delay: 60ms;'
+          data-reveal-lines
+        >
+          I build Web3 products and get them into<br class='hidden sm:block' />
+          <span class='marker'>African markets</span>.
+        </h1>
+
+        <!-- Rotating role line. Screen readers get the static list below. -->
+        <p
+          class='reveal mt-6 flex min-h-[2rem] items-center font-mono text-sm text-ink-muted sm:text-base'
+          style='--reveal-delay: 120ms;'
+          aria-hidden='true'
+        >
+          <span class='text-violet'>&gt;</span>
+          <span
+            id='role-rotator'
+            class='ml-2 transition-opacity duration-150 ease-out'
+            data-roles={JSON.stringify(roles)}
+            >{roles[0]}
+          </span>
+          <span
+            class='ml-0.5 inline-block h-4 w-[2px] bg-violet motion-safe:animate-blink'
+          ></span>
+        </p>
+        <p class='sr-only'>{roles.join(', ')}.</p>
+
+        <p
+          class='reveal mt-8 max-w-prose text-base leading-relaxed text-ink-muted sm:text-lg'
+          style='--reveal-delay: 180ms;'
+        >
+          I'm Zarah. I work in Solidity, Rust and Motoko for on-chain systems,
+          with TypeScript and React on the frontend. The other half of my work
+          is strategy and market entry: I run KoruFlux, handle BD and
+          partnerships at MicroCrop, and lead marketing at jua.exchange. I write
+          documentation and make video content on X, Instagram and TikTok too.
+          Based in Nairobi, working with teams anywhere.
+        </p>
+
+        <div
+          class='reveal mt-10 flex flex-wrap items-center gap-3'
+          style='--reveal-delay: 240ms;'
+        >
+          <a
+            href='#contact'
+            data-magnetic
+            class='inline-flex min-h-[48px] items-center gap-2 rounded-full bg-violet px-7 text-sm font-medium text-white transition-[transform,background-color] duration-150 ease-out hover:bg-violet-deep'
+          >
+            Start a project
+            <svg
+              class='h-4 w-4'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              stroke-width='1.5'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              aria-hidden='true'
+            >
+              <path d='M5 12h14M13 6l6 6-6 6'></path>
+            </svg>
+          </a>
+
+          <a
+            href='#work'
+            class='group inline-flex min-h-[48px] items-center gap-2 rounded-full border border-line bg-surface px-7 text-sm font-medium text-ink transition-colors duration-100 ease-out hover:border-ink'
+          >
+            See the work
+            <svg
+              class='h-4 w-4 transition-transform duration-150 ease-out group-hover:translate-y-0.5'
+              viewBox='0 0 24 24'
+              fill='none'
+              stroke='currentColor'
+              stroke-width='1.5'
+              stroke-linecap='round'
+              stroke-linejoin='round'
+              aria-hidden='true'
+            >
+              <path d='M12 5v14M6 13l6 6 6-6'></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <div class='reveal lg:col-span-5' style='--reveal-delay: 160ms;'>
+        <div class='relative mx-auto aspect-square w-full max-w-sm'>
+          <!-- Orbit ring + travelling logos. -->
+          <div
+            class='absolute inset-0 rounded-full border border-dashed border-line'
+            aria-hidden='true'
+          >
+            {orbiting.map((tech, index) => (
+              <span
+                class="absolute left-1/2 top-1/2 -ml-6 -mt-6 grid h-12 w-12 place-items-center rounded-xl border border-line bg-surface shadow-sm motion-safe:animate-orbit"
+                style={`--orbit-r: clamp(96px, 36vw, 168px); animation-delay: -${
+                  (orbitDuration / orbiting.length) * index
+                }s;`}
+              >
+                <img
+                  src={tech.logo}
+                  alt=""
+                  width="24"
+                  height="24"
+                  class="h-6 w-6 object-contain"
+                  loading="lazy"
+                />
+              </span>
+            ))}
+          </div>
+
+          <div
+            class='absolute inset-[14%] overflow-hidden rounded-full border border-line bg-surface'
+          >
+            <!-- Black and white by default, full colour on hover.
+                 Falls back through .png then the old headshot if the new
+                 file has not been added yet. -->
+            <img
+              src='/newprofile.png'
+              alt='Zarah Gathoni'
+              width='384'
+              height='384'
+              data-fallbacks='/newprofile.jpg,/assets/images/zee.png'
+              class='h-full w-full origin-top scale-[1.35] object-cover grayscale transition-[filter] duration-[400ms] ease-out hover:grayscale-0'
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <dl
+      class='reveal mt-16 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-line bg-line sm:mt-24 sm:grid-cols-4'
+    >
+      {stats.map((stat) => (
+        <div class="bg-surface px-6 py-7">
+          <dt class="font-mono text-xs uppercase tracking-[0.16em] text-ink-muted">
+            {stat.label}
+          </dt>
+          <dd class="mt-2 font-display text-3xl font-semibold tracking-tight sm:text-4xl">
+            <span data-count-to={stat.value}>0</span>
+            <span class="text-violet">{stat.suffix}</span>
+          </dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</section>
+
+<script>
+  // Walk the fallback list if the profile photo is missing.
+  document
+    .querySelectorAll<HTMLImageElement>('img[data-fallbacks]')
+    .forEach((img) => {
+      const queue = (img.dataset.fallbacks || '').split(',').filter(Boolean);
+
+      const advance = () => {
+        const next = queue.shift();
+        if (next) img.src = next;
+      };
+
+      img.addEventListener('error', advance);
+
+      // This script is deferred, so the error may already have fired by now.
+      if (img.complete && img.naturalWidth === 0) advance();
+    });
+
+  const rotator = document.getElementById('role-rotator');
+  const prefersReduced = window.matchMedia(
+    '(prefers-reduced-motion: reduce)'
+  ).matches;
+
+  if (rotator && !prefersReduced) {
+    const items: string[] = JSON.parse(rotator.dataset.roles || '[]');
+
+    if (items.length > 1) {
+      let index = 0;
+
+      setInterval(() => {
+        rotator.style.opacity = '0';
+
+        setTimeout(() => {
+          index = (index + 1) % items.length;
+          rotator.textContent = items[index] as string;
+          rotator.style.opacity = '1';
+        }, 150);
+      }, 2600);
+    }
+  }
+</script>

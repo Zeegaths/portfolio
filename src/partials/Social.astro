@@ -1,0 +1,482 @@
+---
+import { AppConfig } from '@/utils/AppConfig';
+
+type Repo = {
+  id: number;
+  name: string;
+  description: string | null;
+  html_url: string;
+  language: string | null;
+  stargazers_count: number;
+};
+
+// Fetched at build time. Unauthenticated GitHub allows 60 req/hr, which is
+// plenty for a static build, but the build must never fail because of it.
+let repos: Repo[] = [];
+
+try {
+  const response = await fetch(
+    `https://api.github.com/users/${AppConfig.handles.github}/repos?sort=pushed&per_page=4`
+  );
+
+  if (response.ok) {
+    repos = (await response.json()) as Repo[];
+  }
+} catch {
+  // A blocked or rate-limited build must still produce a page. The browser
+  // retries this fetch itself, so the visitor usually sees live repos anyway.
+  repos = [];
+}
+
+const profiles = [
+  {
+    name: 'Instagram',
+    handle: AppConfig.handles.instagram,
+    href: AppConfig.socials.instagram,
+    blurb: 'Build clips, conference days, behind the commits.',
+  },
+  {
+    name: 'TikTok',
+    handle: AppConfig.handles.tiktok,
+    href: AppConfig.socials.tiktok,
+    blurb: 'Short explainers on Web3, sixty seconds at a time.',
+  },
+];
+---
+
+<section
+  id='elsewhere'
+  class='scroll-mt-24 border-t border-line bg-surface py-20 sm:py-28'
+>
+  <div class='container-page'>
+    <div class='reveal max-w-2xl'>
+      <p class='eyebrow'>
+        <span
+          class='inline-block h-1.5 w-1.5 rounded-full bg-violet motion-safe:animate-pulse'
+          aria-hidden='true'></span>
+        Elsewhere
+      </p>
+      <h2
+        class='text-balance mt-5 font-display text-3xl font-semibold tracking-tight sm:text-4xl'
+        data-reveal-lines
+      >
+        Where I post.
+      </h2>
+      <p class='mt-4 max-w-prose text-ink-muted'>
+        Threads, short videos and open repos. Most of my Web3 onboarding work
+        happens here.
+      </p>
+    </div>
+
+    <div class='mt-14 grid gap-6 lg:grid-cols-12'>
+      <!-- Live X timeline ------------------------------------------------ -->
+      <div
+        class='reveal flex flex-col overflow-hidden rounded-2xl border border-line lg:col-span-5'
+      >
+        <div
+          class='flex items-center justify-between gap-4 border-b border-line px-6 py-5'
+        >
+          <div class='flex items-center gap-3'>
+            <span
+              class='grid h-9 w-9 place-items-center rounded-lg bg-ink text-paper'
+            >
+              <svg
+                class='h-4 w-4'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                aria-hidden='true'
+              >
+                <path
+                  d='M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z'
+                ></path>
+              </svg>
+            </span>
+            <div>
+              <p class='font-display text-sm font-semibold'>X</p>
+              <p class='font-mono text-xs text-ink-muted'>
+                {AppConfig.handles.x}
+              </p>
+            </div>
+          </div>
+          <a
+            href={AppConfig.socials.x}
+            target='_blank'
+            rel='noopener noreferrer'
+            class='inline-flex min-h-[40px] items-center rounded-full border border-line px-4 text-sm font-medium transition-colors duration-100 ease-out hover:border-ink'
+          >
+            Follow
+          </a>
+        </div>
+
+        <div class='relative min-h-[420px] grow bg-paper' data-x-timeline>
+          <!-- Skeleton shows until the widget paints; also the fallback if the
+               script is blocked by a tracker blocker. -->
+          <div
+            class='absolute inset-0 z-10 flex flex-col gap-4 bg-paper p-6'
+            data-x-skeleton
+          >
+            <div class='h-3 w-1/3 rounded bg-line'></div>
+            <div class='h-3 w-full rounded bg-line'></div>
+            <div class='h-3 w-5/6 rounded bg-line'></div>
+            <div class='mt-6 h-3 w-1/3 rounded bg-line'></div>
+            <div class='h-3 w-full rounded bg-line'></div>
+            <div class='h-3 w-2/3 rounded bg-line'></div>
+            <p class='mt-auto text-sm text-ink-muted' data-x-fallback hidden>
+              Tracker blockers usually stop this timeline from loading.
+              <a
+                href={AppConfig.socials.x}
+                target='_blank'
+                rel='noopener noreferrer'
+                class='font-medium text-violet underline underline-offset-4'
+              >
+                Read it on X instead.
+              </a>
+            </p>
+          </div>
+
+          <a
+            class='twitter-timeline'
+            data-height='420'
+            data-theme='light'
+            data-chrome='noheader nofooter noborders transparent'
+            href={AppConfig.socials.x}
+            >Posts by {AppConfig.handles.x}
+          </a>
+        </div>
+      </div>
+
+      <!-- GitHub --------------------------------------------------------- -->
+      <div class='reveal rounded-2xl border border-line lg:col-span-7'>
+        <div
+          class='flex items-center justify-between gap-4 border-b border-line px-6 py-5'
+        >
+          <div class='flex items-center gap-3'>
+            <span
+              class='grid h-9 w-9 place-items-center rounded-lg bg-ink text-paper'
+            >
+              <svg
+                class='h-5 w-5'
+                viewBox='0 0 24 24'
+                fill='currentColor'
+                aria-hidden='true'
+              >
+                <path
+                  d='M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.203 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.522 2 12 2Z'
+                ></path>
+              </svg>
+            </span>
+            <div>
+              <p class='font-display text-sm font-semibold'>GitHub</p>
+              <p class='font-mono text-xs text-ink-muted'>
+                {AppConfig.handles.github}
+              </p>
+            </div>
+          </div>
+          <a
+            href={AppConfig.socials.github}
+            target='_blank'
+            rel='noopener noreferrer'
+            class='inline-flex min-h-[40px] items-center rounded-full border border-line px-4 text-sm font-medium transition-colors duration-100 ease-out hover:border-ink'
+          >
+            Follow
+          </a>
+        </div>
+
+        <div class='border-b border-line p-6'>
+          <p
+            class='font-mono text-xs uppercase tracking-[0.16em] text-ink-muted'
+          >
+            Contributions
+          </p>
+          <img
+            src={`https://ghchart.rshah.org/6D28D9/${AppConfig.handles.github}`}
+            alt={`GitHub contribution graph for ${AppConfig.handles.github}`}
+            width='663'
+            height='104'
+            loading='lazy'
+            class='mt-4 w-full'
+          />
+        </div>
+
+        <div class='p-6'>
+          <p
+            class='font-mono text-xs uppercase tracking-[0.16em] text-ink-muted'
+          >
+            Recently pushed
+          </p>
+
+          {repos.length > 0 ? (
+            <ul class="mt-4 grid gap-3 sm:grid-cols-2">
+              {repos.map((repo) => (
+                <li>
+                  <a
+                    href={repo.html_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="group flex h-full flex-col rounded-xl border border-line p-4 transition-colors duration-100 ease-out hover:border-violet"
+                  >
+                    <span class="font-display text-sm font-medium transition-colors duration-100 ease-out group-hover:text-violet">
+                      {repo.name}
+                    </span>
+                    <span class="mt-1 line-clamp-2 text-sm text-ink-muted">
+                      {repo.description || 'No description yet.'}
+                    </span>
+                    <span class="mt-3 flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-ink-muted">
+                      {repo.language && <span>{repo.language}</span>}
+                      <span>★ {repo.stargazers_count}</span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div data-repo-zone>
+              {/* Filled client-side when the build-time fetch was blocked. */}
+              <ul
+                class="mt-4 grid gap-3 sm:grid-cols-2"
+                data-repo-target
+                hidden
+              />
+
+              <div class="mt-4 grid gap-3 sm:grid-cols-2" data-repo-skeleton>
+                {[0, 1, 2, 3].map(() => (
+                  <div class="rounded-xl border border-line p-4">
+                    <div class="h-3 w-2/5 rounded bg-line" />
+                    <div class="mt-3 h-3 w-full rounded bg-line" />
+                    <div class="mt-2 h-3 w-3/4 rounded bg-line" />
+                    <div class="mt-4 h-3 w-1/3 rounded bg-line" />
+                  </div>
+                ))}
+              </div>
+
+              <div
+                class="mt-4 rounded-xl border border-dashed border-line p-6 text-center"
+                data-repo-cta
+                hidden
+              >
+                <p class="text-sm text-ink-muted">
+                  The full list of repositories lives on GitHub.
+                </p>
+                <a
+                  href={AppConfig.socials.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="mt-3 inline-flex min-h-[40px] items-center text-sm font-medium text-violet underline underline-offset-4"
+                >
+                  Browse the profile on GitHub
+                </a>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Instagram + TikTok --------------------------------------------- -->
+      {profiles.map((profile) => (
+        <a
+          href={profile.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="reveal group relative overflow-hidden rounded-2xl border border-line p-6 transition-colors duration-100 ease-out hover:border-violet lg:col-span-6"
+        >
+          <span
+            class="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-violet-soft blur-2xl transition-opacity duration-200 ease-out group-hover:opacity-0 motion-safe:animate-drift"
+            aria-hidden="true"
+          />
+
+          <div class="relative flex items-start justify-between gap-6">
+            <div>
+              <p class="font-display text-lg font-semibold">{profile.name}</p>
+              <p class="mt-1 font-mono text-xs text-ink-muted">
+                {profile.handle}
+              </p>
+              <p class="mt-4 max-w-sm text-sm leading-relaxed text-ink-muted">
+                {profile.blurb}
+              </p>
+            </div>
+
+            <span class="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line transition-colors duration-100 ease-out group-hover:border-violet group-hover:text-violet">
+              <svg
+                class="h-4 w-4 transition-transform duration-150 ease-out motion-safe:group-hover:-translate-y-0.5 motion-safe:group-hover:translate-x-0.5"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M7 17 17 7M8 7h9v9" />
+              </svg>
+            </span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  // --- GitHub repos -----------------------------------------------------
+  // The build-time fetch can be blocked or rate-limited. When that happens
+  // the browser fetches the same public endpoint itself, so a visitor still
+  // sees live repositories. Only if that also fails do we fall back to a
+  // plain link, with no error text.
+  const repoZone = document.querySelector<HTMLElement>('[data-repo-zone]');
+
+  if (repoZone) {
+    const target =
+      repoZone.querySelector<HTMLUListElement>('[data-repo-target]');
+    const skeleton = repoZone.querySelector<HTMLElement>(
+      '[data-repo-skeleton]'
+    );
+    const cta = repoZone.querySelector<HTMLElement>('[data-repo-cta]');
+
+    type Repo = {
+      name: string;
+      description: string | null;
+      html_url: string;
+      language: string | null;
+      stargazers_count: number;
+    };
+
+    const giveUp = () => {
+      skeleton?.remove();
+      cta?.removeAttribute('hidden');
+    };
+
+    const render = (repos: Repo[]) => {
+      if (!target || repos.length === 0) {
+        giveUp();
+        return;
+      }
+
+      repos.forEach((repo) => {
+        const item = document.createElement('li');
+
+        const link = document.createElement('a');
+        link.href = repo.html_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.className =
+          'group flex h-full flex-col rounded-xl border border-line p-4 transition-colors duration-100 ease-out hover:border-violet';
+
+        const name = document.createElement('span');
+        name.className =
+          'font-display text-sm font-medium transition-colors duration-100 ease-out group-hover:text-violet';
+        name.textContent = repo.name;
+
+        const description = document.createElement('span');
+        description.className = 'mt-1 line-clamp-2 text-sm text-ink-muted';
+        description.textContent = repo.description || 'No description yet.';
+
+        const meta = document.createElement('span');
+        meta.className =
+          'mt-3 flex items-center gap-3 font-mono text-[11px] uppercase tracking-widest text-ink-muted';
+
+        if (repo.language) {
+          const language = document.createElement('span');
+          language.textContent = repo.language;
+          meta.appendChild(language);
+        }
+
+        const stars = document.createElement('span');
+        stars.textContent = `\u2605 ${repo.stargazers_count}`;
+        meta.appendChild(stars);
+
+        link.append(name, description, meta);
+        item.appendChild(link);
+        target.appendChild(item);
+      });
+
+      skeleton?.remove();
+      target.removeAttribute('hidden');
+    };
+
+    const loadRepos = async () => {
+      try {
+        const response = await fetch(
+          'https://api.github.com/users/Zeegaths/repos?sort=pushed&per_page=4'
+        );
+        if (!response.ok) throw new Error(String(response.status));
+        render((await response.json()) as Repo[]);
+      } catch {
+        giveUp();
+      }
+    };
+
+    if ('IntersectionObserver' in window) {
+      const repoObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            loadRepos();
+            repoObserver.disconnect();
+          }
+        },
+        { rootMargin: '200px' }
+      );
+
+      repoObserver.observe(repoZone);
+    } else {
+      loadRepos();
+    }
+  }
+</script>
+
+<script>
+  // Load the X widget lazily, and reveal a fallback link if it never paints.
+  const container = document.querySelector<HTMLElement>('[data-x-timeline]');
+
+  if (container) {
+    const skeleton = container.querySelector<HTMLElement>('[data-x-skeleton]');
+    const fallback = container.querySelector<HTMLElement>('[data-x-fallback]');
+
+    // The widget counts as loaded only once it has painted real height.
+    // An empty iframe (blocked content) must still show the fallback link.
+    const hasRenderedTimeline = () => {
+      const frame = container.querySelector('iframe');
+      return Boolean(frame && frame.getBoundingClientRect().height > 150);
+    };
+
+    const giveUp = () => {
+      skeleton?.removeAttribute('hidden');
+      fallback?.removeAttribute('hidden');
+    };
+
+    const load = () => {
+      const script = document.createElement('script');
+      script.src = 'https://platform.twitter.com/widgets.js';
+      script.async = true;
+      script.onerror = giveUp;
+      document.head.appendChild(script);
+
+      const check = window.setInterval(() => {
+        if (hasRenderedTimeline()) {
+          skeleton?.remove();
+          window.clearInterval(check);
+        }
+      }, 250);
+
+      window.setTimeout(() => {
+        window.clearInterval(check);
+        if (!hasRenderedTimeline()) giveUp();
+      }, 8000);
+    };
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((entry) => entry.isIntersecting)) {
+            load();
+            observer.disconnect();
+          }
+        },
+        { rootMargin: '200px' }
+      );
+
+      observer.observe(container);
+    } else {
+      load();
+    }
+  }
+</script>

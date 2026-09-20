@@ -1,0 +1,529 @@
+---
+import { AppConfig } from '@/utils/AppConfig';
+
+const links = [
+  { label: 'X', href: AppConfig.socials.x },
+  { label: 'LinkedIn', href: AppConfig.socials.linkedin },
+  { label: 'GitHub', href: AppConfig.socials.github },
+  { label: 'Instagram', href: AppConfig.socials.instagram },
+  { label: 'TikTok', href: AppConfig.socials.tiktok },
+];
+
+const projectTypes = [
+  'Smart contract build or review',
+  'Full-stack Web3 product',
+  'Market entry or partnerships',
+  'Technical writing or video',
+  'Something else',
+];
+
+const field =
+  'mt-1.5 block w-full rounded-xl border border-line bg-paper px-4 py-3 text-base text-ink transition-colors duration-100 ease-out placeholder:text-ink-soft hover:border-ink-soft focus:border-violet aria-[invalid]:border-red-600';
+const label = 'block text-sm font-medium text-ink';
+const hint = 'mt-1.5 text-xs text-ink-muted';
+const errorText = 'mt-1.5 text-xs font-medium text-red-700';
+---
+
+<section id='contact' class='scroll-mt-24 border-t border-line py-24 sm:py-32'>
+  <div class='container-page'>
+    <div class='grid gap-14 lg:grid-cols-12 lg:gap-20'>
+      <div class='reveal relative lg:col-span-5'>
+        <div
+          class='pointer-events-none absolute inset-0 -z-10'
+          aria-hidden='true'
+        >
+          <div
+            class='absolute -left-20 top-0 h-72 w-72 rounded-full bg-violet-soft blur-3xl motion-safe:animate-drift'
+          >
+          </div>
+        </div>
+
+        <p class='eyebrow'>
+          <span class='relative flex h-2 w-2' aria-hidden='true'>
+            <span
+              class='absolute inline-flex h-full w-full rounded-full bg-lime motion-safe:animate-pulse-ring'
+            ></span>
+            <span class='relative inline-flex h-2 w-2 rounded-full bg-lime-deep'
+            ></span>
+          </span>
+          Currently taking on select projects
+        </p>
+
+        <h2
+          class='text-balance mt-6 font-display text-4xl font-bold leading-[1.05] tracking-tight sm:text-5xl'
+          data-reveal-lines
+        >
+          Building a product, or taking one into
+          <span class='marker'>African markets</span>?
+        </h2>
+
+        <p class='mt-6 max-w-prose text-ink-muted sm:text-lg'>
+          Tell me what you're working on and I'll get back to you within a day.
+        </p>
+
+        <p class='mt-8 text-sm text-ink-muted'>
+          Prefer your own inbox?
+          <a
+            href={`mailto:${AppConfig.email}`}
+            class='font-medium text-violet underline underline-offset-4 transition-colors duration-100 ease-out hover:text-violet-deep'
+          >
+            {AppConfig.email}
+          </a>
+        </p>
+
+        <ul class='mt-6 flex flex-wrap items-center gap-x-6 gap-y-2'>
+          {links.map((link) => (
+            <li>
+              <a
+                href={link.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group inline-flex min-h-[40px] items-center text-sm font-medium text-ink-muted transition-colors duration-100 ease-out hover:text-ink"
+              >
+                {link.label}
+                <span
+                  class="ml-1 inline-block transition-transform duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                >
+                  ↗
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class='reveal lg:col-span-7' data-card-home>
+        <div
+          class='rounded-2xl border border-line bg-surface p-6 sm:p-8'
+          data-contact-card
+        >
+          <!--
+            Netlify picks this form up from the deployed HTML automatically.
+            One-time setup: Netlify dashboard, Site configuration, Forms,
+            Form notifications, add an email notification to the address below.
+          -->
+          <form
+            name='contact'
+            method='POST'
+            data-netlify='true'
+            netlify-honeypot='bot-field'
+            novalidate
+            data-contact-form
+          >
+            <input type='hidden' name='form-name' value='contact' />
+
+            <p class='hidden'>
+              <label>
+                Leave this field empty
+                <input name='bot-field' tabindex='-1' autocomplete='off' />
+              </label>
+            </p>
+
+            <div
+              class='mb-6 hidden rounded-xl border border-red-200 bg-red-50 p-4'
+              data-form-banner
+              role='alert'
+            >
+              <p class='text-sm font-medium text-red-800' data-form-banner-text>
+              </p>
+            </div>
+
+            <div class='grid gap-5 sm:grid-cols-2'>
+              <div>
+                <label class={label} for='contact-name'>
+                  Name <span class='font-normal text-ink-muted'
+                    >(required)
+                  </span>
+                </label>
+                <input
+                  class={field}
+                  id='contact-name'
+                  name='name'
+                  type='text'
+                  autocomplete='name'
+                  spellcheck='false'
+                  required
+                  placeholder='Zarah Gathoni'
+                />
+                <p class={errorText} id='contact-name-error' hidden></p>
+              </div>
+
+              <div>
+                <label class={label} for='contact-email'>
+                  Email <span class='font-normal text-ink-muted'
+                    >(required)
+                  </span>
+                </label>
+                <input
+                  class={field}
+                  id='contact-email'
+                  name='email'
+                  type='email'
+                  autocomplete='email'
+                  spellcheck='false'
+                  required
+                  placeholder='you@company.com'
+                />
+                <p class={errorText} id='contact-email-error' hidden></p>
+              </div>
+            </div>
+
+            <div class='mt-5'>
+              <label class={label} for='contact-type'>What do you need?</label>
+              <select class={field} id='contact-type' name='project_type'>
+                {projectTypes.map((type) => (
+                  <option value={type}>{type}</option>
+                ))}
+              </select>
+            </div>
+
+            <div class='mt-5'>
+              <label class={label} for='contact-message'>
+                Your project <span class='font-normal text-ink-muted'
+                  >(required)
+                </span>
+              </label>
+              <textarea
+                class={field}
+                id='contact-message'
+                name='message'
+                rows='5'
+                required
+                placeholder='What are you building, and where could you use a hand?'
+              ></textarea>
+              <p class={hint}>
+                A couple of sentences is plenty. Links welcome.
+              </p>
+              <p class={errorText} id='contact-message-error' hidden></p>
+            </div>
+
+            <div class='mt-7 flex flex-wrap items-center gap-4'>
+              <button
+                class='inline-flex min-h-[52px] items-center gap-2 rounded-full bg-ink px-8 font-medium text-paper transition-colors duration-100 ease-out hover:bg-violet disabled:cursor-not-allowed disabled:opacity-60'
+                type='submit'
+                data-form-submit
+              >
+                <span data-submit-label>Send it over</span>
+                <svg
+                  class='h-4 w-4 motion-safe:animate-spin'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  stroke-width='2'
+                  stroke-linecap='round'
+                  aria-hidden='true'
+                  data-submit-spinner
+                  hidden
+                >
+                  <path d='M21 12a9 9 0 1 1-6.219-8.56'></path>
+                </svg>
+                <svg
+                  class='h-4 w-4'
+                  viewBox='0 0 24 24'
+                  fill='none'
+                  stroke='currentColor'
+                  stroke-width='1.5'
+                  stroke-linecap='round'
+                  stroke-linejoin='round'
+                  aria-hidden='true'
+                  data-submit-arrow
+                >
+                  <path d='M5 12h14M13 6l6 6-6 6'></path>
+                </svg>
+              </button>
+
+              <p class='text-xs text-ink-muted'>
+                I reply within a day, usually sooner.
+              </p>
+            </div>
+          </form>
+
+          <div class='py-8 text-center' data-form-success hidden>
+            <span
+              class='mx-auto grid h-12 w-12 place-items-center rounded-full bg-lime'
+              aria-hidden='true'
+            >
+              <svg
+                class='h-6 w-6 text-ink'
+                viewBox='0 0 24 24'
+                fill='none'
+                stroke='currentColor'
+                stroke-width='2'
+                stroke-linecap='round'
+                stroke-linejoin='round'
+              >
+                <path d='m5 13 4 4L19 7'></path>
+              </svg>
+            </span>
+
+            <p class='mt-5 font-display text-xl font-semibold tracking-tight'>
+              Got it, thank you.
+            </p>
+            <p class='mx-auto mt-2 max-w-sm text-sm text-ink-muted'>
+              Your message is with me. I'll reply to the address you gave within
+              a day.
+            </p>
+
+            <button
+              class='mt-6 inline-flex min-h-[44px] items-center rounded-full border border-line px-6 text-sm font-medium transition-colors duration-100 ease-out hover:border-ink'
+              type='button'
+              data-form-reset
+            >
+              Send another
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<dialog
+  id='contact-dialog'
+  class='w-[calc(100vw-2rem)] max-w-2xl rounded-2xl border border-line bg-surface p-0 backdrop:bg-ink/70 backdrop:backdrop-blur-sm'
+  aria-label='Start a project'
+>
+  <div
+    class='flex items-center justify-between gap-4 border-b border-line px-6 py-5'
+  >
+    <div>
+      <p class='font-display text-base font-semibold tracking-tight'>
+        Start a project
+      </p>
+      <p class='mt-0.5 text-sm text-ink-muted'>
+        I reply within a day, usually sooner.
+      </p>
+    </div>
+
+    <button
+      type='button'
+      data-dialog-close
+      class='grid h-10 w-10 shrink-0 place-items-center rounded-full border border-line transition-colors duration-100 ease-out hover:border-ink'
+      aria-label='Close'
+    >
+      <svg
+        class='h-4 w-4'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='1.5'
+        stroke-linecap='round'
+        aria-hidden='true'
+      >
+        <path d='M18 6 6 18M6 6l12 12'></path>
+      </svg>
+    </button>
+  </div>
+
+  <div class='max-h-[70vh] overflow-y-auto p-6' data-dialog-slot></div>
+</dialog>
+
+<style>
+  /* Inside the dialog the card would double up the frame and padding,
+     because the dialog already provides both. */
+  [data-dialog-slot] [data-contact-card] {
+    border: 0;
+    background: transparent;
+    padding: 0;
+  }
+</style>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('[data-contact-form]');
+
+  if (form) {
+    const card = document.querySelector<HTMLElement>('[data-contact-card]');
+    const success = card?.querySelector<HTMLElement>('[data-form-success]');
+    const banner = form.querySelector<HTMLElement>('[data-form-banner]');
+    const bannerText = form.querySelector<HTMLElement>(
+      '[data-form-banner-text]'
+    );
+    const submit = form.querySelector<HTMLButtonElement>('[data-form-submit]');
+    const submitLabel = form.querySelector<HTMLElement>('[data-submit-label]');
+    const spinner = form.querySelector<HTMLElement>('[data-submit-spinner]');
+    const arrow = form.querySelector<HTMLElement>('[data-submit-arrow]');
+    const resetButton = card?.querySelector<HTMLElement>('[data-form-reset]');
+
+    type Named = 'name' | 'email' | 'message';
+
+    const validators: Record<Named, (value: string) => string> = {
+      name: (value) =>
+        value.trim() ? '' : 'Add your name so I know who I am replying to.',
+      email: (value) => {
+        if (!value.trim()) return 'Add an email address so I can reply.';
+        // Deliberately loose: the server and the reply are the real check.
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim())
+          ? ''
+          : 'That email address looks incomplete. Check for a missing @ or domain.';
+      },
+      message: (value) =>
+        value.trim().length >= 10
+          ? ''
+          : 'Tell me a little about the project, even one or two sentences.',
+    };
+
+    const fieldOf = (key: Named) =>
+      form.elements.namedItem(key) as
+        | HTMLInputElement
+        | HTMLTextAreaElement
+        | null;
+
+    const errorOf = (key: Named) =>
+      document.getElementById(`contact-${key}-error`);
+
+    const showError = (key: Named, message: string) => {
+      const input = fieldOf(key);
+      const slot = errorOf(key);
+      if (!input || !slot) return;
+
+      if (message) {
+        input.setAttribute('aria-invalid', 'true');
+        input.setAttribute('aria-describedby', `contact-${key}-error`);
+        slot.textContent = message;
+        slot.removeAttribute('hidden');
+      } else {
+        input.removeAttribute('aria-invalid');
+        input.removeAttribute('aria-describedby');
+        slot.setAttribute('hidden', '');
+      }
+    };
+
+    // Validate on blur, never on keystroke. Clear an error as soon as the
+    // user fixes it.
+    (['name', 'email', 'message'] as Named[]).forEach((key) => {
+      const input = fieldOf(key);
+      if (!input) return;
+
+      input.addEventListener('blur', () =>
+        showError(key, validators[key](input.value))
+      );
+      input.addEventListener('input', () => {
+        if (input.getAttribute('aria-invalid')) {
+          const stillWrong = validators[key](input.value);
+          if (!stillWrong) showError(key, '');
+        }
+      });
+    });
+
+    const setBusy = (busy: boolean) => {
+      if (!submit) return;
+      submit.disabled = busy;
+      form.setAttribute('aria-busy', String(busy));
+      if (submitLabel)
+        submitLabel.textContent = busy ? 'Sending' : 'Send it over';
+      if (spinner) spinner.hidden = !busy;
+      if (arrow) arrow.hidden = busy;
+    };
+
+    const showBanner = (message: string) => {
+      if (!banner || !bannerText) return;
+      bannerText.textContent = message;
+      banner.classList.remove('hidden');
+    };
+
+    const hideBanner = () => banner?.classList.add('hidden');
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      hideBanner();
+
+      const keys: Named[] = ['name', 'email', 'message'];
+      let firstInvalid: HTMLElement | null = null;
+
+      keys.forEach((key) => {
+        const input = fieldOf(key);
+        if (!input) return;
+        const message = validators[key](input.value);
+        showError(key, message);
+        if (message && !firstInvalid) firstInvalid = input;
+      });
+
+      if (firstInvalid) {
+        (firstInvalid as HTMLElement).focus();
+        return;
+      }
+
+      setBusy(true);
+
+      try {
+        const data = new FormData(form);
+        const response = await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(
+            data as unknown as Record<string, string>
+          ).toString(),
+        });
+
+        if (!response.ok) throw new Error(String(response.status));
+
+        form.hidden = true;
+        success?.removeAttribute('hidden');
+        success?.setAttribute('tabindex', '-1');
+        (success as HTMLElement | null)?.focus();
+      } catch {
+        showBanner(
+          'That did not send. Please try again, or email zarahgathoni76@gmail.com directly.'
+        );
+      } finally {
+        setBusy(false);
+      }
+    });
+
+    // --- Modal ---------------------------------------------------------
+    // Any link to #contact opens the form in a dialog. The card is moved
+    // rather than duplicated, so ids stay unique and Netlify still sees one
+    // form. Without JS the link just scrolls to the same form in the page.
+    const dialog = document.getElementById(
+      'contact-dialog'
+    ) as HTMLDialogElement | null;
+    const slot = dialog?.querySelector<HTMLElement>('[data-dialog-slot]');
+    const home = document.querySelector<HTMLElement>('[data-card-home]');
+
+    if (
+      dialog &&
+      slot &&
+      home &&
+      card &&
+      typeof dialog.showModal === 'function'
+    ) {
+      const openDialog = () => {
+        slot.appendChild(card);
+        dialog.showModal();
+        fieldOf('name')?.focus();
+      };
+
+      const returnCard = () => {
+        home.appendChild(card);
+      };
+
+      document
+        .querySelectorAll<HTMLAnchorElement>('a[href="#contact"]')
+        .forEach((trigger) => {
+          trigger.addEventListener('click', (event) => {
+            event.preventDefault();
+            openDialog();
+          });
+        });
+
+      dialog
+        .querySelector('[data-dialog-close]')
+        ?.addEventListener('click', () => dialog.close());
+
+      // Clicking the backdrop closes it. Escape is handled natively.
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+      });
+
+      dialog.addEventListener('close', returnCard);
+    }
+
+    resetButton?.addEventListener('click', () => {
+      form.reset();
+      form.hidden = false;
+      success?.setAttribute('hidden', '');
+      fieldOf('name')?.focus();
+    });
+  }
+</script>

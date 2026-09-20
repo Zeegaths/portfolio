@@ -1,0 +1,89 @@
+---
+import { techStack } from '@/utils/Content';
+
+// Each track renders the list twice so the -50% translate loops seamlessly.
+const rowOne = [...techStack, ...techStack];
+const rowTwo = [...techStack].reverse();
+const rowTwoLooped = [...rowTwo, ...rowTwo];
+---
+
+<section
+  id='stack'
+  class='scroll-mt-24 border-y border-line bg-surface py-20 sm:py-28'
+>
+  <div class='container-page'>
+    <div class='reveal max-w-2xl'>
+      <p class='eyebrow'>
+        <span
+          class='inline-block h-1.5 w-1.5 rounded-full bg-violet motion-safe:animate-pulse'
+          aria-hidden='true'></span>
+        Stack
+      </p>
+      <h2
+        class='text-balance mt-5 font-display text-3xl font-semibold tracking-tight sm:text-4xl'
+        data-reveal-lines
+      >
+        What I work with.
+      </h2>
+      <p class='mt-4 max-w-prose text-ink-muted'>
+        The languages and tools I reach for most, across Bitcoin, EVM chains,
+        the Internet Computer and Starknet.
+      </p>
+    </div>
+  </div>
+
+  <!-- Decorative motion: the same names are listed accessibly below. -->
+  <div
+    class='reveal relative mt-14 flex flex-col gap-4 [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]'
+    aria-hidden='true'
+  >
+    <div class='marquee-track flex w-max gap-4 motion-safe:animate-marquee'>
+      {rowOne.map((tech) => (
+        <span class="flex shrink-0 items-center gap-3 rounded-full border border-line bg-paper py-3 pl-3 pr-6">
+          <img
+            src={tech.logo}
+            alt=""
+            width="28"
+            height="28"
+            class="h-7 w-7 object-contain"
+            loading="lazy"
+          />
+          <span class="font-display text-sm font-medium">{tech.name}</span>
+        </span>
+      ))}
+    </div>
+
+    <div
+      class='marquee-track flex w-max gap-4 motion-safe:animate-marquee-reverse'
+    >
+      {rowTwoLooped.map((tech) => (
+        <span class="flex shrink-0 items-center gap-3 rounded-full border border-line bg-paper py-3 pl-3 pr-6">
+          <img
+            src={tech.logo}
+            alt=""
+            width="28"
+            height="28"
+            class="h-7 w-7 object-contain"
+            loading="lazy"
+          />
+          <span class="font-mono text-xs uppercase tracking-widest text-ink-muted">
+            {tech.note}
+          </span>
+        </span>
+      ))}
+    </div>
+  </div>
+
+  <div class='container-page'>
+    <ul
+      class='reveal mt-14 grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4 lg:grid-cols-4'
+    >
+      {techStack.map((tech) => (
+        <li class="border-t border-line pt-4">
+          <p class="font-display text-base font-medium">{tech.name}</p>
+          <p class="mt-1 text-sm text-ink-muted">{tech.note}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>

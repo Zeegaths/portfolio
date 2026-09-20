@@ -1,7 +1,7 @@
 ---
 layout: '@/templates/BasePost.astro'
 title: BuilderUptime, Because Therapy is Expensive and AI.., well I don’t trust it
-description: I sat in my Dubai hotel after one of my worst pitch practices. Everyone got grilled, but it hit me harder than most — it always does.
+description: I sat in my Dubai hotel after one of my worst pitch practices. Everyone got grilled, but it hit me harder than most. It always does.
 pubDate: 2025-12-5T00:00:00Z
 imgSrc: '/assets/images/uptimegirl.jpg'
 imgAlt: 'Image post 5'

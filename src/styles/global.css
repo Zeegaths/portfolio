@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper font-sans text-ink antialiased;
+  }
+
+  /* Selection picks up the accent rather than the browser default blue. */
+  ::selection {
+    @apply bg-lime text-ink;
+  }
+
+  /* A display utility (grid, flex) beats the UA [hidden] rule, so hidden
+     elements that also carry one would stay visible. Make hidden win. */
+  [hidden] {
+    display: none !important;
+  }
+
+  /* One focus treatment for the whole site. 3:1 against paper and surface. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-violet ring-offset-2 ring-offset-paper;
+  }
+}
+
+@layer components {
+  /* Section gutter. Every section uses this, no per-section invention. */
+  .container-page {
+    @apply mx-auto w-full max-w-container px-5 sm:px-8 lg:px-12;
+  }
+
+  /* Mono eyebrow label above section headings. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-ink-muted;
+  }
+
+  /* Photos sit mostly desaturated so the page stays calm, but keep enough
+     colour to read the Stellar blue, the bitcoin++ orange and the lanyards.
+     Full colour on hover or keyboard focus. */
+  .photo-muted {
+    filter: grayscale(0.68) contrast(1.02);
+  }
+
+  .group:hover .photo-muted,
+  .group:focus-visible .photo-muted {
+    filter: grayscale(0);
+  }
+
+  /* Lime marker highlight: sits behind ink text, never replaces it. */
+  .marker {
+    @apply relative inline-block;
+  }
+
+  .marker::after {
+    @apply absolute inset-x-0 bottom-[0.1em] -z-10 h-[0.36em] bg-lime content-[''];
+  }
+}
+
+@layer utilities {
+  /* Line-by-line headline reveal. The splitter wraps each rendered line in a
+     mask; the inner span rises into it. Padding keeps descenders and the lime
+     marker from being clipped by the mask. */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.14em;
+    margin-bottom: -0.14em;
+  }
+
+  .line-inner {
+    display: block;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .line-inner {
+      transform: translateY(110%);
+      transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+      transition-delay: var(--line-delay, 0ms);
+    }
+
+    html.js .is-visible .line-inner {
+      transform: translateY(0);
+    }
+  }
+
+  /* Scroll reveal. Elements start hidden ONLY when JS is running and motion is
+     allowed, so no-JS and reduced-motion users always see full content. */
+  .reveal {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    html.js .reveal {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 500ms cubic-bezier(0, 0, 0.2, 1),
+        transform 500ms cubic-bezier(0, 0, 0.2, 1);
+      transition-delay: var(--reveal-delay, 0ms);
+    }
+
+    html.js .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Pause the marquee on hover or when a link inside it takes focus. */
+  .marquee-track:hover,
+  .marquee-track:focus-within {
+    animation-play-state: paused;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* Hard stop for every decorative animation. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

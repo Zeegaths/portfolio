@@ -1,6 +1,8 @@
 ---
-import { Footer } from '@/partials/Footer';
-import { Navbar } from '@/partials/Navbar';
+import '@/styles/global.css';
+
+import Footer from '@/partials/Footer.astro';
+import Navbar from '@/partials/Navbar.astro';
 import { AppConfig } from '@/utils/AppConfig';
 
 export interface Props {
@@ -22,59 +24,279 @@ const {
     <title>{title}</title>
     <meta name='description' content={description} />
     <meta name='author' content={AppConfig.author} />
+    <meta name='theme-color' content='#FAFAFA' />
+
+    <meta property='og:title' content={title} />
+    <meta property='og:description' content={description} />
+    <meta property='og:type' content='website' />
+    <meta name='twitter:card' content='summary_large_image' />
+    <meta name='twitter:creator' content={AppConfig.handles.x} />
 
     <link rel='alternate' type='application/rss+xml' href='/rss.xml' />
     <link rel='icon' type='image/x-icon' href='/favicon.ico' />
-    
-    <style is:global>
-      /* Override blue colors globally */
-      :root {
-        --color-primary: #f97316; /* Orange */
-        --color-secondary: #f59e0b; /* Amber */
-      }
-      
-      /* Remove blue from project cards */
-      article {
-        background: transparent !important;
-      }
-      
-      /* Style blog post cards */
-      article a {
-        background: rgba(0, 0, 0, 0.4) !important;
-        border: 1px solid rgba(249, 115, 22, 0.2) !important;
-        transition: all 0.3s ease !important;
-      }
-      
-      article a:hover {
-        background: rgba(249, 115, 22, 0.1) !important;
-        border-color: rgba(249, 115, 22, 0.5) !important;
-        transform: translateY(-4px) !important;
-      }
-      
-      /* Remove cyan/blue text colors */
-      .text-cyan-400 {
-        color: #f97316 !important; /* Orange */
-      }
-      
-      .text-cyan-600 {
-        color: #f97316 !important; /* Orange */
-      }
-      
-      /* Override any bg-slate colors that look blue */
-      .bg-slate-800 {
-        background-color: rgba(0, 0, 0, 0.6) !important;
-      }
-      
-      .bg-slate-700 {
-        background-color: rgba(0, 0, 0, 0.5) !important;
-      }
-    </style>
+
+    <link rel='preconnect' href='https://fonts.googleapis.com' />
+    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin />
+    <link
+      rel='stylesheet'
+      href='https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap'
+    />
+
+    <!-- Set before first paint so reveal elements never flash in unstyled. -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
-  <body class='bg-black text-gray-100'>
+
+  <body>
+    <a
+      href='#main'
+      class='sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:bg-ink focus:px-5 focus:py-3 focus:font-mono focus:text-xs focus:uppercase focus:tracking-widest focus:text-paper'
+    >
+      Skip to content
+    </a>
+
     <Navbar />
 
-    <slot></slot>
+    <main id='main'>
+      <slot></slot>
+    </main>
 
     <Footer />
+
+    <script>
+      // --- Scroll reveal -------------------------------------------------
+      const prefersReduced = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+      ).matches;
+
+      const revealables = document.querySelectorAll<HTMLElement>('.reveal');
+
+      if (prefersReduced || !('IntersectionObserver' in window)) {
+        revealables.forEach((el) => el.classList.add('is-visible'));
+      } else {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { rootMargin: '0px 0px -12% 0px', threshold: 0.1 }
+        );
+
+        revealables.forEach((el) => observer.observe(el));
+      }
+
+      // --- Line-by-line headline reveal ----------------------------------
+      // Lines only exist after layout, so the text is split into word spans,
+      // grouped by their measured offsetTop, and each group wrapped in a mask.
+      // Element children (the lime marker, links) are kept whole.
+      const headlines = document.querySelectorAll<HTMLElement>(
+        '[data-reveal-lines]'
+      );
+
+      type Unit = { el: HTMLElement; space: boolean; br?: boolean };
+
+      // Track whether the source actually had whitespace between two units,
+      // so punctuation that hugs a word ("markets.") stays hugged.
+      const buildUnits = (source: HTMLElement): Unit[] => {
+        const units: Unit[] = [];
+        let pendingSpace = false;
+
+        source.childNodes.forEach((node) => {
+          if (node.nodeType === Node.TEXT_NODE) {
+            const text = node.textContent || '';
+            const words = text.split(/\s+/).filter(Boolean);
+
+            words.forEach((word, index) => {
+              const span = document.createElement('span');
+              span.className = 'inline-block';
+              span.textContent = word;
+              units.push({
+                el: span,
+                space: index === 0 ? pendingSpace || /^\s/.test(text) : true,
+              });
+            });
+
+            pendingSpace = words.length
+              ? /\s$/.test(text)
+              : pendingSpace || /\s/.test(text);
+          } else if (node.nodeName === 'BR') {
+            units.push({
+              el: document.createElement('br'),
+              space: false,
+              br: true,
+            });
+            pendingSpace = false;
+          } else if (node.nodeType === Node.ELEMENT_NODE) {
+            const clone = node.cloneNode(true) as HTMLElement;
+            clone.style.display = 'inline-block';
+            units.push({ el: clone, space: pendingSpace });
+            pendingSpace = false;
+          }
+        });
+
+        return units;
+      };
+
+      const splitLines = (el: HTMLElement) => {
+        const original = el.dataset.originalHtml ?? el.innerHTML;
+        el.dataset.originalHtml = original;
+
+        const staging = document.createElement('div');
+        staging.innerHTML = original;
+        const units = buildUnits(staging as unknown as HTMLElement);
+        if (units.length === 0) return;
+
+        // Lay the units out flat so their positions can be measured.
+        el.textContent = '';
+        units.forEach((unit) => {
+          if (unit.space) el.appendChild(document.createTextNode(' '));
+          el.appendChild(unit.el);
+        });
+
+        const lines: Unit[][] = [];
+        let currentTop: number | null = null;
+
+        units.forEach((unit) => {
+          if (unit.br) {
+            currentTop = null;
+            return;
+          }
+          const top = unit.el.offsetTop;
+          if (currentTop === null || Math.abs(top - currentTop) > 4) {
+            lines.push([]);
+            currentTop = top;
+          }
+          lines[lines.length - 1]?.push(unit);
+        });
+
+        el.textContent = '';
+        lines.forEach((line, index) => {
+          const mask = document.createElement('span');
+          mask.className = 'line-mask';
+
+          const inner = document.createElement('span');
+          inner.className = 'line-inner';
+          inner.style.setProperty('--line-delay', `${index * 70}ms`);
+
+          line.forEach((unit, unitIndex) => {
+            // No leading space at the start of a line.
+            if (unit.space && unitIndex > 0) {
+              inner.appendChild(document.createTextNode(' '));
+            }
+            inner.appendChild(unit.el);
+          });
+
+          mask.appendChild(inner);
+          el.appendChild(mask);
+        });
+      };
+
+      if (headlines.length > 0 && !prefersReduced) {
+        const prepare = () => {
+          headlines.forEach((el) => {
+            splitLines(el);
+            if (el.dataset.revealed === 'true') el.classList.add('is-visible');
+          });
+        };
+
+        const ready = document.fonts?.ready ?? Promise.resolve();
+
+        ready.then(() => {
+          prepare();
+
+          const lineObserver = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (!entry.isIntersecting) return;
+                const el = entry.target as HTMLElement;
+                el.classList.add('is-visible');
+                el.dataset.revealed = 'true';
+                lineObserver.unobserve(el);
+              });
+            },
+            { rootMargin: '0px 0px -10% 0px', threshold: 0.1 }
+          );
+
+          headlines.forEach((el) => lineObserver.observe(el));
+
+          // Line breaks change with the viewport, so re-split after a resize.
+          let resizeTimer = 0;
+          window.addEventListener('resize', () => {
+            window.clearTimeout(resizeTimer);
+            resizeTimer = window.setTimeout(prepare, 200);
+          });
+        });
+      }
+
+      // --- Count-up stats ------------------------------------------------
+      const counters =
+        document.querySelectorAll<HTMLElement>('[data-count-to]');
+
+      const runCounter = (el: HTMLElement) => {
+        const target = Number(el.dataset.countTo || 0);
+        const duration = 900;
+        const start = performance.now();
+
+        const tick = (now: number) => {
+          const progress = Math.min((now - start) / duration, 1);
+          // ease-out cubic
+          const eased = 1 - (1 - progress) ** 3;
+          el.textContent = String(Math.round(target * eased));
+          if (progress < 1) requestAnimationFrame(tick);
+        };
+
+        requestAnimationFrame(tick);
+      };
+
+      if (prefersReduced || !('IntersectionObserver' in window)) {
+        counters.forEach((el) => {
+          el.textContent = el.dataset.countTo || '';
+        });
+      } else {
+        const countObserver = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                runCounter(entry.target as HTMLElement);
+                countObserver.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.6 }
+        );
+
+        counters.forEach((el) => countObserver.observe(el));
+      }
+
+      // --- Magnetic primary actions --------------------------------------
+      // Pointer-only, so touch users are unaffected.
+      const canHover = window.matchMedia('(hover: hover)').matches;
+
+      if (canHover && !prefersReduced) {
+        document
+          .querySelectorAll<HTMLElement>('[data-magnetic]')
+          .forEach((el) => {
+            const strength = 0.22;
+
+            el.addEventListener('pointermove', (event) => {
+              const rect = el.getBoundingClientRect();
+              const x = event.clientX - rect.left - rect.width / 2;
+              const y = event.clientY - rect.top - rect.height / 2;
+              el.style.transform = `translate(${x * strength}px, ${
+                y * strength
+              }px)`;
+            });
+
+            el.addEventListener('pointerleave', () => {
+              el.style.transform = '';
+            });
+          });
+      }
+    </script>
   </body>
 </html>

@@ -1,0 +1,54 @@
+---
+import BlogGallery from '@/partials/BlogGallery.astro';
+import type { IPost } from '@/types/Frontmatter';
+
+export interface Props {
+  postList: IPost[];
+}
+
+const { postList } = Astro.props as Props;
+---
+
+<section id='writing' class='scroll-mt-24 py-20 sm:py-28'>
+  <div class='container-page'>
+    <div class='reveal flex flex-wrap items-end justify-between gap-6'>
+      <div class='max-w-2xl'>
+        <p class='eyebrow'>
+          <span
+            class='inline-block h-1.5 w-1.5 rounded-full bg-violet motion-safe:animate-pulse'
+            aria-hidden='true'></span>
+          Writing
+        </p>
+        <h2
+          class='text-balance mt-5 font-display text-3xl font-semibold tracking-tight sm:text-4xl'
+          data-reveal-lines
+        >
+          Things I've written.
+        </h2>
+      </div>
+
+      <a
+        href='/posts/'
+        class='group inline-flex min-h-[48px] items-center gap-2 rounded-full border border-line bg-surface px-6 text-sm font-medium transition-colors duration-100 ease-out hover:border-ink'
+      >
+        All posts
+        <svg
+          class='h-4 w-4 transition-transform duration-150 ease-out group-hover:translate-x-1'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke='currentColor'
+          stroke-width='1.5'
+          stroke-linecap='round'
+          stroke-linejoin='round'
+          aria-hidden='true'
+        >
+          <path d='M5 12h14M13 6l6 6-6 6'></path>
+        </svg>
+      </a>
+    </div>
+
+    <div class='mt-14'>
+      <BlogGallery postList={postList} />
+    </div>
+  </div>
+</section>

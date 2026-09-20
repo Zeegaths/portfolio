@@ -1,0 +1,225 @@
+---
+import { galleryItems } from '@/utils/Content';
+---
+
+<section
+  id='cool-stuff'
+  class='scroll-mt-24 border-t border-line py-20 sm:py-28'
+>
+  <div class='container-page'>
+    <div class='reveal max-w-2xl'>
+      <p class='eyebrow'>
+        <span
+          class='inline-block h-1.5 w-1.5 rounded-full bg-violet motion-safe:animate-pulse'
+          aria-hidden='true'></span>
+        Cool stuff
+      </p>
+      <h2
+        class='text-balance mt-5 font-display text-3xl font-semibold tracking-tight sm:text-4xl'
+        data-reveal-lines
+      >
+        A few highlights.
+      </h2>
+      <p class='mt-4 max-w-prose text-ink-muted'>
+        Stages, mentor rooms and hackathon tables. Hover a photo for full
+        colour, or click it for the full size.
+      </p>
+    </div>
+
+    {galleryItems.length > 0 ? (
+      <ul class="reveal mt-14 grid gap-x-8 gap-y-12 sm:grid-cols-2">
+        {galleryItems.map((item, index) => (
+          <li>
+            <figure>
+              <button
+                type="button"
+                data-gallery-open={index}
+                class="group block w-full overflow-hidden rounded-2xl border border-line bg-surface"
+              >
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  width="1200"
+                  height="800"
+                  loading="lazy"
+                  class="photo-muted aspect-[3/2] w-full object-cover transition-[filter,transform] duration-[400ms] ease-out motion-safe:group-hover:scale-[1.03]"
+                />
+                <span class="sr-only">View “{item.caption}” at full size</span>
+              </button>
+
+              <figcaption class="mt-5">
+                <p class="font-display text-lg font-medium leading-snug tracking-tight">
+                  {item.caption}
+                </p>
+                <p class="mt-1.5 font-mono text-xs uppercase tracking-[0.16em] text-ink-muted">
+                  {item.meta}
+                </p>
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <div class="reveal mt-14 rounded-2xl border border-dashed border-line p-12 text-center">
+        <p class="font-display text-lg font-medium">No photos yet.</p>
+        <p class="mx-auto mt-2 max-w-sm text-sm text-ink-muted">
+          Add images to{' '}
+          <code class="font-mono text-xs">public/assets/images/</code> and list
+          them in <code class="font-mono text-xs">src/utils/Content.ts</code>.
+        </p>
+      </div>
+    )}
+  </div>
+</section>
+
+{galleryItems.length > 0 && (
+  <dialog
+    id="gallery-lightbox"
+    class="w-full max-w-4xl rounded-2xl border border-line bg-surface p-0 backdrop:bg-ink/70 backdrop:backdrop-blur-sm"
+    aria-label="Photo viewer"
+  >
+    <div class="flex items-center justify-between gap-4 border-b border-line px-5 py-4">
+      <div>
+        <p class="font-display text-sm font-semibold" data-lightbox-caption />
+        <p
+          class="mt-0.5 font-mono text-[11px] uppercase tracking-widest text-ink-muted"
+          data-lightbox-meta
+        />
+      </div>
+
+      <button
+        type="button"
+        data-lightbox-close
+        class="grid h-10 w-10 place-items-center rounded-full border border-line transition-colors duration-100 ease-out hover:border-ink"
+        aria-label="Close photo viewer"
+      >
+        <svg
+          class="h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path d="M18 6 6 18M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="bg-paper">
+      <img
+        data-lightbox-image
+        src=""
+        alt=""
+        class="mx-auto max-h-[70vh] w-full object-contain"
+      />
+    </div>
+
+    <div class="flex items-center justify-between gap-4 border-t border-line px-5 py-4">
+      <button
+        type="button"
+        data-lightbox-prev
+        class="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-line px-5 text-sm font-medium transition-colors duration-100 ease-out hover:border-ink"
+      >
+        <svg
+          class="h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M19 12H5M11 18l-6-6 6-6" />
+        </svg>
+        Previous
+      </button>
+
+      <button
+        type="button"
+        data-lightbox-next
+        class="inline-flex min-h-[44px] items-center gap-2 rounded-full border border-line px-5 text-sm font-medium transition-colors duration-100 ease-out hover:border-ink"
+      >
+        Next
+        <svg
+          class="h-4 w-4"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M5 12h14M13 6l6 6-6 6" />
+        </svg>
+      </button>
+    </div>
+  </dialog>
+)}
+
+<script>
+  import { galleryItems } from '@/utils/Content';
+
+  const dialog = document.getElementById(
+    'gallery-lightbox'
+  ) as HTMLDialogElement | null;
+
+  if (dialog && galleryItems.length > 0) {
+    const image = dialog.querySelector<HTMLImageElement>(
+      '[data-lightbox-image]'
+    );
+    const caption = dialog.querySelector<HTMLElement>(
+      '[data-lightbox-caption]'
+    );
+    const meta = dialog.querySelector<HTMLElement>('[data-lightbox-meta]');
+    let current = 0;
+
+    const show = (index: number) => {
+      current = (index + galleryItems.length) % galleryItems.length;
+      const item = galleryItems[current];
+      if (!item || !image || !caption || !meta) return;
+
+      image.src = item.src;
+      image.alt = item.alt;
+      caption.textContent = item.caption;
+      meta.textContent = `${item.meta} · ${current + 1} of ${
+        galleryItems.length
+      }`;
+    };
+
+    document
+      .querySelectorAll<HTMLButtonElement>('[data-gallery-open]')
+      .forEach((button) => {
+        button.addEventListener('click', () => {
+          show(Number(button.dataset.galleryOpen));
+          dialog.showModal();
+        });
+      });
+
+    dialog
+      .querySelector('[data-lightbox-close]')
+      ?.addEventListener('click', () => dialog.close());
+
+    dialog
+      .querySelector('[data-lightbox-prev]')
+      ?.addEventListener('click', () => show(current - 1));
+
+    dialog
+      .querySelector('[data-lightbox-next]')
+      ?.addEventListener('click', () => show(current + 1));
+
+    // Arrow keys navigate; Escape is handled natively by <dialog>.
+    dialog.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') show(current - 1);
+      if (event.key === 'ArrowRight') show(current + 1);
+    });
+
+    // Clicking the backdrop closes it.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>

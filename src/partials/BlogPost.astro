@@ -1,0 +1,70 @@
+---
+import { format } from 'date-fns';
+
+import type { IFrontmatter } from '@/types/Frontmatter';
+import { AppConfig } from '@/utils/AppConfig';
+
+export interface Props {
+  frontmatter: IFrontmatter;
+}
+
+const { frontmatter } = Astro.props as Props;
+---
+
+<article class='container-page py-16 sm:py-24'>
+  <div class='mx-auto max-w-3xl'>
+    <a
+      href='/posts/'
+      class='group inline-flex min-h-[40px] items-center gap-2 font-mono text-xs uppercase tracking-[0.16em] text-ink-muted transition-colors duration-100 ease-out hover:text-ink'
+    >
+      <svg
+        class='h-3.5 w-3.5 transition-transform duration-150 ease-out group-hover:-translate-x-0.5'
+        viewBox='0 0 24 24'
+        fill='none'
+        stroke='currentColor'
+        stroke-width='1.5'
+        stroke-linecap='round'
+        stroke-linejoin='round'
+        aria-hidden='true'
+      >
+        <path d='M19 12H5M11 18l-6-6 6-6'></path>
+      </svg>
+      All posts
+    </a>
+
+    <h1
+      class='text-balance mt-8 font-display text-3xl font-bold leading-tight tracking-tight sm:text-5xl'
+    >
+      {frontmatter.title}
+    </h1>
+
+    <div class='mt-6 flex flex-wrap items-center gap-x-4 gap-y-2'>
+      <time
+        datetime={frontmatter.pubDate}
+        class='font-mono text-xs uppercase tracking-[0.16em] text-ink-muted'
+      >
+        {format(new Date(frontmatter.pubDate), 'LLL d, yyyy')}
+      </time>
+      <span class='h-1 w-1 rounded-full bg-line' aria-hidden='true'></span>
+      <span
+        class='font-mono text-xs uppercase tracking-[0.16em] text-ink-muted'
+      >
+        {AppConfig.author}
+      </span>
+    </div>
+
+    <img
+      src={frontmatter.imgSrc}
+      alt={frontmatter.imgAlt}
+      width='1024'
+      height='576'
+      class='mt-10 aspect-[16/9] w-full rounded-2xl border border-line object-cover'
+    />
+
+    <div
+      class='prose prose-slate mt-12 max-w-none prose-headings:font-display prose-headings:tracking-tight prose-a:text-violet prose-a:underline-offset-4'
+    >
+      <slot></slot>
+    </div>
+  </div>
+</article>
